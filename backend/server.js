@@ -111,60 +111,63 @@ let ocrWorker = null;
 let ocrWorkerInitializing = false;
 
 async function getOCRWorker() {
-    if (ocrWorker) return ocrWorker;
-    // Prevent multiple simultaneous initializations
+  if (ocrWorker) return ocrWorker;
+  // Prevent multiple simultaneous initializations
   if (ocrWorkerInitializing) {
-        // Wait for existing init to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
-        return getOCRWorker();
+    // Wait for existing init to complete
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return getOCRWorker();
   }
-    ocrWorkerInitializing = true;
-    console.log('Initializing OCR Worker...');
-    try {
-          // Use local eng.traineddata file to avoid downloading it at runtime
-      // This is critical on Render where internet access for ML models can be slow/blocked
-      const worker = await Tesseract.createWorker('eng', 1, {
-              langPath: __dirname,  // tells Tesseract to look for eng.traineddata in the backend folder
-              cacheMethod: 'readOnly', // don't try to write to cache
-      });
-          ocrWorker = worker;
-          console.log('OCR Worker ready');
-    } catch (err) {
-          console.error('OCR Worker init failed:', err.message);
-          ocrWorker = null;
-    } finally {
-          ocrWorkerInitializing = false;
-    }
-    return ocrWorker;
+  ocrWorkerInitializing = true;
+  console.log('🏗️ Initializing OCR Worker...');
+  try {
+    // Use local eng.traineddata file to avoid downloading it at runtime
+    // This is critical on Render where internet access for ML models can be slow/blocked
+    const worker = await Tesseract.createWorker('eng', 1, {
+      langPath: __dirname,  // tells Tesseract to look for eng.traineddata in the backend folder
+      cacheMethod: 'readOnly', // don't try to write to cache
+    });
+    ocrWorker = worker;
+    console.log('✅ OCR Worker ready');
+  } catch (err) {
+    console.error('⚠️ OCR Worker init failed:', err.message);
+    ocrWorker = null;
+  } finally {
+    ocrWorkerInitializing = false;
+  }
+  return ocrWorker;
 }
 
-// Wrap OCR with a 25-second timeout so the upload route always responds
+// Wrap OCR with a 60-second timeout so the upload route always responds
 async function runOCR(filePath) {
-    const OCR_TIMEOUT_MS = 25000;
-    try {
-          const worker = await getOCRWorker();
-          if (!worker) {
-                  console.warn('OCR worker unavailable, returning empty text');
-                  return '';
-          }
-          const ocrPromise = worker.recognize(filePath);
-          const timeoutPromise = new Promise((_, reject) =>
-                  setTimeout(() => reject(new Error('OCR timed out after 25s')), OCR_TIMEOUT_MS)
-                                                 );
-          const { data } = await Promise.race([ocrPromise, timeoutPromise]);
-          return data.text || '';
-    } catch (err) {
-          console.error('OCR Error:', err.message);
-          // Reset worker so it reinitialises on the next request
-      ocrWorker = null;
-          return '';
+  const OCR_TIMEOUT_MS = 60000; // Increased to 60s for Render free-tier
+  const fileName = path.basename(filePath);
+  console.log(`🔍 [OCR] Starting extraction for ${fileName}...`);
+  try {
+    const worker = await getOCRWorker();
+    if (!worker) {
+      console.error(`❌ [OCR] Worker unavailable for ${fileName}`);
+      return '';
     }
+    const ocrPromise = worker.recognize(filePath);
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('OCR processing timed out after 60s')), OCR_TIMEOUT_MS)
+    );
+    const { data } = await Promise.race([ocrPromise, timeoutPromise]);
+    console.log(`✅ [OCR] Extraction complete for ${fileName} (${data.text.length} chars)`);
+    return data.text || '';
+  } catch (err) {
+    console.error(`❌ [OCR] Error processing ${fileName}:`, err.message);
+    // Reset worker so it reinitialises on the next request
+    ocrWorker = null;
+    return '';
+  }
 }
 
 // Pre-warm OCR worker in the background after server starts
 setTimeout(() => {
-    console.log('Pre-warming OCR worker in background...');
-    getOCRWorker().catch(err => console.error('Pre-warm failed:', err.message));
+  console.log('🔥 Pre-warming OCR worker in background...');
+  getOCRWorker().catch(err => console.error('Pre-warm failed:', err.message));
 }, 2000);
 
 function parseCSVRegister(filePath) {
@@ -258,12 +261,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString(), version: '2.0.0', ocr_ready: !!ocrWorker });
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), version: '2.0.0', ocr_ready: !!ocrWorker });
 });
 
 // Lightweight ping endpoint for keep-alive (call this from frontend or uptime monitor)
 app.get('/api/ping', (req, res) => {
-    res.json({ pong: true, t: Date.now() });
+  res.json({ pong: true, t: Date.now() });
 });
 
 // Dashboard stats

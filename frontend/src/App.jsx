@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, NavLink, useLocation, Navigate } from 'react-router-dom';
 import {
   LayoutDashboard, Upload, FileText, GitMerge, BarChart2,
@@ -45,6 +45,18 @@ const ProtectedRoute = ({ children }) => {
 function AppContent() {
   const location = useLocation();
   const { user, loading, logout } = useAuth();
+
+  // Keep the Render backend warm by pinging it every 10 minutes.
+  // Render free tier spins down after 15 min of inactivity, causing
+  // the first request (OCR upload) to time out while the server wakes up.
+  useEffect(() => {
+    if (!user) return;
+    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+    const ping = () => fetch(`${API_BASE}/ping`).catch(() => {});
+    ping(); // immediate ping on login
+    const interval = setInterval(ping, 10 * 60 * 1000); // every 10 min
+    return () => clearInterval(interval);
+  }, [user]);
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 

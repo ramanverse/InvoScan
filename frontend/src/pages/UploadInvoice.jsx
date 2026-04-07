@@ -82,7 +82,14 @@ export default function UploadInvoice() {
                 toast.success(`${successCount} invoice${successCount !== 1 ? 's' : ''} processed successfully!`);
             }
         } catch (err) {
-            toast.error(err.error || 'Upload failed. Is the backend running?');
+            const msg = err.error || err.message || '';
+            const isTimeout = msg.toLowerCase().includes('timeout') || msg.toLowerCase().includes('network');
+            toast.error(
+                isTimeout
+                    ? 'Backend is waking up (Render cold start). Please wait 30s and try again.'
+                    : msg || 'Upload failed. Please try again.',
+                { duration: 6000 }
+            );
             setFiles(prev => prev.map(f => ({ ...f, status: 'ready' })));
         } finally {
             setUploading(false);
