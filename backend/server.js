@@ -111,11 +111,8 @@ let ocrWorker = null;
 async function getOCRWorker() {
   if (ocrWorker) return ocrWorker;
   console.log('🏗️ Initializing OCR Worker...');
-  const worker = await Tesseract.createWorker({
-    logger: m => console.log(`[OCR] ${m.status}: ${(m.progress * 100).toFixed(0)}%`),
-  });
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
+  // Note: Removing logger to prevent DataCloneError in worker serialization on Render
+  const worker = await Tesseract.createWorker('eng');
   ocrWorker = worker;
   return ocrWorker;
 }
