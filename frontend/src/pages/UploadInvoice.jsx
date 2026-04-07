@@ -3,7 +3,8 @@ import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Upload, FileText, X, CheckCircle, AlertCircle, Loader, Eye, Image, Folder, UploadCloud } from 'lucide-react';
-import { invoiceAPI } from '../api.js';
+import { invoiceAPI, healthAPI } from '../api.js';
+import { useEffect } from 'react';
 
 function formatBytes(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -24,6 +25,22 @@ export default function UploadInvoice() {
     const [progress, setProgress] = useState(0);
     const [results, setResults] = useState([]);
     const navigate = useNavigate();
+    const [isWakingUp, setIsWakingUp] = useState(false);
+
+    // Pre-warm the backend (Render cold start)
+    useEffect(() => {
+        const prewarm = async () => {
+            try {
+                setIsWakingUp(true);
+                await healthAPI.ping();
+            } catch (e) {
+                console.warn('Backend wake-up ping failed', e);
+            } finally {
+                setIsWakingUp(false);
+            }
+        };
+        prewarm();
+    }, []);
 
     const onDrop = useCallback((acceptedFiles) => {
         const newFiles = acceptedFiles.map(f => ({
@@ -167,9 +184,8 @@ export default function UploadInvoice() {
                                 <div className="progress-fill indigo" style={{ width: `${progress}%`, boxShadow: '0 0 15px var(--accent-primary)' }} />
                             </div>
                             <div className="flex justify-between mt-3" style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                                <span>Scanning layout...</span>
-                                <span>OCR Analysis</span>
-                                <span>Finalizing</span>
+                                <span>{progress < 30 ? 'Uploading...' : progress < 70 ? 'Analyzing layout...' : 'Finalizing OCR extraction...'}</span>
+                                {progress > 95 && <span className="pulse">Processing on server (may take up to 60s)...</span>}
                             </div>
                         </div>
                     )}

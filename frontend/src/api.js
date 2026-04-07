@@ -56,4 +56,8 @@ export const statsAPI = {
     get: () => API.get('/stats'),
 };
 
+export const healthAPI = {
+    ping: () => API.get('/ping'),
+};
+
 export default API;
