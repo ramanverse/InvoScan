@@ -152,7 +152,7 @@ export default function UploadInvoice() {
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-2">
                                     <div className="pulse-dot" />
-                                    <span style={{ fontSize: 13, fontWeight: 600 }}>AI Vision Engine Active</span>
+                                    <span style={{ fontSize: 13, fontWeight: 600 }}>InvoScan Engine Active</span>
                                 </div>
                                 <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent-primary)' }}>{progress}%</span>
                             </div>

@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "invoscan-backend",
   "version": "2.0.0",
   "main": "server.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Invoice OCR Reconciler Backend API",
+  "description": "InvoScan Backend API",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^9.4.3",

@@ -56,7 +56,7 @@ function AppContent() {
       '/reconcile': { title: 'Reconciliation Engine', subtitle: 'Match invoices against payment register' },
       '/reports': { title: 'Reports & Analytics', subtitle: 'Export and analyze reconciliation results' },
     };
-    return map[location.pathname] || { title: 'Invoice OCR', subtitle: '' };
+    return map[location.pathname] || { title: 'InvoScan', subtitle: '' };
   };
 
   const meta = getPageMeta();

@@ -149,7 +149,7 @@ export default function Dashboard() {
                     </div>
                     <div>
                         <div style={{ fontSize: 20, fontWeight: 800, color: '#f1f5f9' }}>
-                            Welcome to InvoiceAI Pro
+                            Welcome to InvoScan
                         </div>
                         <div style={{ fontSize: 13, color: '#94a3b8' }}>
                             AI-powered OCR · Intelligent reconciliation · Real-time analytics
