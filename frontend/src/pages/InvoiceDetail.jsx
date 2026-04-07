@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Edit2, Save, X, FileText, DollarSign, Calendar, Hash, Tag } from 'lucide-react';
+import { ArrowLeft, Edit2, Save, X, FileText, DollarSign, Calendar, Hash, Tag, CheckCircle, Clock, AlertTriangle, XCircle, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { invoiceAPI } from '../api.js';
 
@@ -24,11 +24,11 @@ function Field({ label, value, icon }) {
 }
 
 const STATUS_MAP = {
-    matched: { color: 'var(--accent-green)', bg: 'rgba(34,197,94,0.1)', label: '✅ Matched' },
-    pending: { color: 'var(--accent-yellow)', bg: 'rgba(245,158,11,0.1)', label: '⏳ Pending' },
-    mismatch: { color: 'var(--accent-red)', bg: 'rgba(239,68,68,0.1)', label: '⚠️ Mismatch' },
-    missing: { color: '#f87171', bg: 'rgba(239,68,68,0.07)', label: '❌ Missing' },
-    duplicate: { color: 'var(--accent-secondary)', bg: 'rgba(139,92,246,0.1)', label: '🔁 Duplicate' },
+    matched: { color: 'var(--accent-green)', bg: 'rgba(34,197,94,0.1)', label: <span className="flex items-center gap-1"><CheckCircle size={14} /> Matched</span> },
+    pending: { color: 'var(--accent-yellow)', bg: 'rgba(245,158,11,0.1)', label: <span className="flex items-center gap-1"><Clock size={14} /> Pending</span> },
+    mismatch: { color: 'var(--accent-red)', bg: 'rgba(239,68,68,0.1)', label: <span className="flex items-center gap-1"><AlertTriangle size={14} /> Mismatch</span> },
+    missing: { color: '#f87171', bg: 'rgba(239,68,68,0.07)', label: <span className="flex items-center gap-1"><XCircle size={14} /> Missing</span> },
+    duplicate: { color: 'var(--accent-secondary)', bg: 'rgba(139,92,246,0.1)', label: <span className="flex items-center gap-1"><RefreshCw size={14} /> Duplicate</span> },
 };
 
 export default function InvoiceDetail() {
@@ -347,8 +347,8 @@ export default function InvoiceDetail() {
             {/* Raw OCR Text */}
             {invoice.ocr_raw_text && (
                 <details className="card">
-                    <summary style={{ cursor: 'pointer', fontWeight: 600, fontSize: 14, color: 'var(--text-secondary)' }}>
-                        📝 View Raw OCR Text
+                    <summary className="flex items-center gap-2" style={{ cursor: 'pointer', fontWeight: 600, fontSize: 14, color: 'var(--text-secondary)' }}>
+                        <FileText size={16} /> View Raw OCR Text
                     </summary>
                     <pre style={{
                         marginTop: 16,

@@ -94,7 +94,7 @@ export default function Dashboard() {
     if (error) {
         return (
             <div className="error-state-container" style={{ padding: '60px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: 48, marginBottom: 20 }}>⚠️</div>
+                <div style={{ marginBottom: 20 }}><AlertTriangle size={48} color="var(--accent-yellow)" /></div>
                 <h3 style={{ marginBottom: 16, color: 'var(--text-primary)' }}>Dashboard Unreachable</h3>
                 <p style={{ color: 'var(--text-muted)', maxWidth: 400, margin: '0 auto 24px' }}>{error}</p>
                 <button className="btn btn-primary" onClick={fetchStats}>
@@ -248,7 +248,7 @@ export default function Dashboard() {
                         </ResponsiveContainer>
                     ) : (
                         <div className="empty-state" style={{ padding: 40 }}>
-                            <div className="empty-icon">📊</div>
+                            <div className="empty-icon"><BarChart2 size={48} /></div>
                             <div className="empty-title">No data yet</div>
                             <div className="empty-subtitle">Upload invoices to see stats</div>
                         </div>
@@ -298,7 +298,7 @@ export default function Dashboard() {
                     </div>
                 ) : (
                     <div className="empty-state">
-                        <div className="empty-icon">📄</div>
+                        <div className="empty-icon"><FileText size={48} /></div>
                         <div className="empty-title">No invoices yet</div>
                         <div className="empty-subtitle">
                             <Link to="/upload" className="text-accent">Upload your first invoice</Link> to get started

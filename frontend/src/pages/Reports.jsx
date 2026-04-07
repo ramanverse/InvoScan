@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, History, RefreshCw, BarChart2, FileText } from 'lucide-react';
+import { Download, History, RefreshCw, BarChart2, FileText, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { reconcileAPI } from '../api.js';
 import toast from 'react-hot-toast';
@@ -136,7 +136,7 @@ export default function Reports() {
                     </div>
                 ) : sessions.length === 0 ? (
                     <div className="empty-state">
-                        <div className="empty-icon">📈</div>
+                        <div className="empty-icon"><TrendingUp size={48} /></div>
                         <div className="empty-title">No reconciliations yet</div>
                         <div className="empty-subtitle">Run your first reconciliation to see history here</div>
                     </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Eye, Trash2, FileText, Filter, RefreshCw } from 'lucide-react';
+import { Search, Eye, Trash2, FileText, Filter, RefreshCw, FolderOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { invoiceAPI } from '../api.js';
 
@@ -157,7 +157,7 @@ export default function InvoiceList() {
                     </div>
                 ) : invoices.length === 0 ? (
                     <div className="empty-state">
-                        <div className="empty-icon">📂</div>
+                        <div className="empty-icon"><FolderOpen size={48} /></div>
                         <div className="empty-title">{search || status ? 'No invoices match your filters' : 'No invoices yet'}</div>
                         <div className="empty-subtitle">
                             {!search && !status && <Link to="/upload" className="text-accent">Upload your first invoice</Link>}

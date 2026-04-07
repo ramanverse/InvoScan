@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Upload, FileText, X, CheckCircle, AlertCircle, Loader, Eye } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle, AlertCircle, Loader, Eye, Image, Folder, UploadCloud } from 'lucide-react';
 import { invoiceAPI } from '../api.js';
 
 function formatBytes(bytes) {
@@ -13,9 +13,9 @@ function formatBytes(bytes) {
 
 function getFileIcon(file) {
     const ext = file.name.split('.').pop().toLowerCase();
-    if (ext === 'pdf') return '📄';
-    if (['jpg', 'jpeg', 'png'].includes(ext)) return '🖼️';
-    return '📁';
+    if (ext === 'pdf') return <FileText size={16} />;
+    if (['jpg', 'jpeg', 'png'].includes(ext)) return <Image size={16} />;
+    return <Folder size={16} />;
 }
 
 export default function UploadInvoice() {
@@ -79,7 +79,7 @@ export default function UploadInvoice() {
             }));
 
             if (successCount > 0) {
-                toast.success(`✅ ${successCount} invoice${successCount !== 1 ? 's' : ''} processed successfully!`);
+                toast.success(`${successCount} invoice${successCount !== 1 ? 's' : ''} processed successfully!`);
             }
         } catch (err) {
             toast.error(err.error || 'Upload failed. Is the backend running?');
@@ -102,7 +102,7 @@ export default function UploadInvoice() {
             {/* Dropzone */}
             <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`} style={{ marginBottom: 24 }}>
                 <input {...getInputProps()} />
-                <span className="dropzone-icon">📤</span>
+                <span className="dropzone-icon"><UploadCloud size={48} /></span>
                 <div className="dropzone-title">
                     {isDragActive ? 'Drop your invoices here!' : 'Drag & drop invoices'}
                 </div>

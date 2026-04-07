@@ -75,7 +75,7 @@ function AppContent() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">⚡</div>
+          <div className="sidebar-logo-icon"><Zap size={24} /></div>
         </div>
 
         <nav className="sidebar-nav">

@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
 import {
     CheckCircle, AlertTriangle, XCircle, Copy, GitMerge,
-    Upload, Play, Download, Info, RefreshCw
+    Upload, Play, Download, Info, RefreshCw, Clipboard, Lightbulb
 } from 'lucide-react';
 import { registerAPI, reconcileAPI } from '../api.js';
 
@@ -34,7 +34,7 @@ export default function Reconciliation() {
             const data = await registerAPI.upload(formData);
             setRegisterRecords(data.records || []);
             setRegisterLoaded(true);
-            toast.success(`✅ ${data.count} payment records loaded`);
+            toast.success(`${data.count} payment records loaded`);
         } catch (err) {
             toast.error(err.error || 'Failed to upload register');
         } finally {
@@ -124,7 +124,7 @@ export default function Reconciliation() {
                             </div>
                         ) : (
                             <>
-                                <span className="dropzone-icon" style={{ fontSize: 48 }}>📋</span>
+                                <span className="dropzone-icon"><Clipboard size={48} /></span>
                                 <div className="dropzone-title" style={{ fontSize: 16 }}>
                                     {isDragActive ? 'Drop your register!' : 'Drop payment register here'}
                                 </div>
@@ -326,7 +326,7 @@ export default function Reconciliation() {
                             <strong>Invoice Details:</strong> #{selectedInvoice.invoice?.invoice_number} · ${selectedInvoice.invoice?.total_amount?.toFixed(2)}
                             {selectedInvoice.flag_reason && (
                                 <div style={{ color: 'var(--accent-yellow)', marginTop: 4 }}>
-                                    ⚠️ {selectedInvoice.flag_reason}
+                                    <AlertTriangle size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} /> {selectedInvoice.flag_reason}
                                 </div>
                             )}
                         </div>
@@ -351,7 +351,7 @@ export default function Reconciliation() {
                                             Expected: ${s.record.expected_amount?.toFixed(2)} · Ref: {s.record.reference_number || '—'}
                                         </div>
                                         <div style={{ fontSize: 11, color: 'var(--accent-primary)', marginTop: 4 }}>
-                                            💡 {s.reason}
+                                            <Lightbulb size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} /> {s.reason}
                                         </div>
                                     </div>
                                     <button
